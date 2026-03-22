@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="FileLockingInfoProvider.WindowsService\LockedFilesProviderTest.cpp">
+      <Filter>FileLockingInfoProvider.WindowsService</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="FileLockingInfoProvider.WindowsService">
+      <UniqueIdentifier>{de38aa2a-347f-44af-9a0a-4f3250f0b670}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

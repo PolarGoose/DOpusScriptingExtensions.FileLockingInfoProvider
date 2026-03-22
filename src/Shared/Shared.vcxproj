@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Utils\Exceptions.h" />
+    <ClInclude Include="Utils\LineInfo.h" />
+    <ClInclude Include="Utils\Logging.h" />
+    <ClInclude Include="Utils\StringUtils.h" />
+    <ClInclude Include="Utils\WinApiUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DownloadDependencies.ps1" />
+    <CustomBuild Include="FileLockingInfoProvider.proto">
+      <FileType>Document</FileType>
+      <Command>"$(VcpkgInstalledDir)/$(VcpkgTriplet)/tools/protobuf/protoc" --plugin=protoc-gen-grpc="$(VcpkgInstalledDir)/vcpkg/pkgs/grpc_x64-windows/tools/grpc/grpc_cpp_plugin.exe" --proto_path="$(ProjectDir)/" --cpp_out="$(BuildFolder)grpc_generated/grpc_generated" --grpc_out="$(BuildFolder)grpc_generated/grpc_generated" "$(ProjectDir)FileLockingInfoProvider.proto"</Command>
+      <Outputs>$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.pb.cc;$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.grpc.pb.cc;$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.pb.h;$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.grpc.pb.h</Outputs>
+    </CustomBuild>
+    <ClCompile Include="$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.pb.cc">
+      <IncludeInUnityFile>false</IncludeInUnityFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.grpc.pb.cc">
+      <IncludeInUnityFile>false</IncludeInUnityFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClInclude Include="$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.pb.h" />
+    <ClInclude Include="$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.grpc.pb.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{476AC9A0-8D26-4C05-8232-5D61787C9BEF}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Shared</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <!-- Disable warnings that comes from grpc generated code:
+           * C4702 unreachable code
+           * C4267 conversion from 'size_t' to 'int', possible loss of data -->
+      <DisableSpecificWarnings>4702;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="DownloadDependenciesIfMissing" BeforeTargets="PreBuildEvent" DependsOnTargets="VcpkgInstallManifestDependencies">
+    <Exec Condition="!Exists('$(OutputPath)MediaInfoLanguages')" Command="powershell -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)DownloadDependencies.ps1&quot; -BuildDir &quot;$(BuildFolder)/&quot; -OutputDir &quot;$(OutputPath)/&quot;" />
+  </Target>
+</Project>

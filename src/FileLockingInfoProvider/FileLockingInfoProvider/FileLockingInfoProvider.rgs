@@ -1,0 +1,26 @@
+HKCR
+{
+	DOpusScriptingExtensions.FileLockingInfoProvider.1 = s 'FileLockingInfoProvider class'
+	{
+		CLSID = s '{51722BC4-F414-4C88-8B6D-6FDA48DB10FF}'
+	}
+	DOpusScriptingExtensions.FileLockingInfoProvider = s 'FileLockingInfoProvider class'
+	{		
+		CurVer = s 'DOpusScriptingExtensions.FileLockingInfoProvider.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {51722BC4-F414-4C88-8B6D-6FDA48DB10FF} = s 'FileLockingInfoProvider class'
+		{
+      ProgID = s 'DOpusScriptingExtensions.FileLockingInfoProvider.1'
+			VersionIndependentProgID = s 'DOpusScriptingExtensions.FileLockingInfoProvider'
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			TypeLib = s '{C3AC6694-4C9A-4C2C-BD81-25700827AF2E}'
+			Version = s '1.0'
+		}
+	}
+}

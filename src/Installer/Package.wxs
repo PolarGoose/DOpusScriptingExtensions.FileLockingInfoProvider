@@ -1,0 +1,37 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+  <Package Name="DOpusScriptingExtensions.FileLockingInfoProvider" Manufacturer="PolarGoose" Version="$(var.InstallerVersion)" UpgradeCode="63EE37A2-A9EC-460B-B166-1264B6E98015">
+    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
+    <MediaTemplate EmbedCab="yes"/>
+    <Feature Id="ProductFeature" Title="DOpusScriptingExtensions.FileLockingInfoProvider" Level="1">
+      <Component Id="Component1" Directory="INSTALLFOLDER" Guid="C436DF92-EB2B-4B55-B07E-A2645B359A65">
+        <File Id="id5" Source="DOpusScriptingExtensions.FileLockingInfoProvider.WindowsService.exe" />
+        <File Id="id6" Source="DOpusScriptingExtensions.FileLockingInfoProvider.dll" SelfRegCost="0" />
+        <ServiceInstall Id="id7"
+                        Name="DOpusScriptingExtensions.FileLockingInfoProvider.WindowsService"
+                        DisplayName="DOpusScriptingExtensions FileLockingInfoProvider service"
+                        Description="Provides information about process handles"
+                        Type="ownProcess"
+                        Start="auto"
+                        ErrorControl="normal" />
+        <ServiceControl Id="id8"
+                        Name="DOpusScriptingExtensions.FileLockingInfoProvider.WindowsService"
+                        Start="install"
+                        Stop="both"
+                        Remove="uninstall"
+                        Wait="yes" />
+      </Component>
+      <Component Id="Component2" Directory="DRIVERSFOLDER" Permanent="yes" NeverOverwrite="yes">
+        <File Id="id9" Source="PROCEXP152.SYS" />
+      </Component>
+    </Feature>
+  </Package>
+  <Fragment>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="DOpusScriptingExtensions.FileLockingInfoProvider"/>
+    </StandardDirectory>
+    <StandardDirectory Id="System64Folder">
+      <Directory Id="DRIVERSFOLDER" Name="drivers"/>
+    </StandardDirectory>
+  </Fragment>
+</Wix>

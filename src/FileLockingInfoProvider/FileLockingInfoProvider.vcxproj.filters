@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Gen">
+      <UniqueIdentifier>{6e419df3-5c64-4e14-bfb0-2172405434b0}</UniqueIdentifier>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{e07d3efa-cd73-4dd4-a395-1e1433d2fde1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileLockingInfoProvider">
+      <UniqueIdentifier>{4179fb27-cb02-4214-b15e-7aabfc12297b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="utils\ComUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLockingInfoProvider\FileLockingInfoProvider.h">
+      <Filter>FileLockingInfoProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLockingInfoProvider\ProcessInfo.h">
+      <Filter>FileLockingInfoProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLockingInfoProvider\LockedFilesDatabase.h">
+      <Filter>FileLockingInfoProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLockingInfoProvider_i.h">
+      <Filter>Gen</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="FileLockingInfoProvider_i.c">
+      <Filter>Gen</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FileLockingInfoProvider\FileLockingInfoProvider.rgs">
+      <Filter>FileLockingInfoProvider</Filter>
+    </None>
+    <None Include="FileLockingInfoProvider.def" />
+    <None Include="FileLockingInfoProvider.rgs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FileLockingInfoProvider.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="FileLockingInfoProvider.idl" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,9 @@
+/build/
+.idea/
+.vs/
+*.vcxproj.user
+/src/FileLockingInfoProvider/FileLockingInfoProvider_i.c
+/src/FileLockingInfoProvider/FileLockingInfoProvider_i.h
+/src/FileLockingInfoProvider/FileLockingInfoProvider_p.c
+/src/FileLockingInfoProvider/dlldata.c
+/src/FileLockingInfoProvider/FileLockingInfoProvider.aps

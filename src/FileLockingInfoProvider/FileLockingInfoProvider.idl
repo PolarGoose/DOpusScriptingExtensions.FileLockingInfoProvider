@@ -1,0 +1,37 @@
+import "oaidl.idl";
+import "ocidl.idl";
+
+[object, uuid(D64C510E-343B-46EE-97B8-C42D195705DE), dual, nonextensible, pointer_default(unique)]
+interface IProcessInfo : IDispatch
+{
+  [propget, id(1)] HRESULT Pid([out, retval] UINT* val);
+  [propget, id(2)] HRESULT ExecutablePath([out, retval] BSTR* val);
+  [propget, id(3)] HRESULT DomainName([out, retval] BSTR* val);
+  [propget, id(4)] HRESULT UserName([out, retval] BSTR* val);
+};
+
+[object, uuid(6ACCC77B-D411-48C1-B8EF-6BBC5555D1E0), dual, nonextensible, pointer_default(unique)]
+interface IFileLockingInfoProvider : IDispatch
+{
+  [id(1)] HRESULT GetLockingProcesses([in] BSTR fileFullName, [out, retval] SAFEARRAY(VARIANT)* processInfos);
+};
+
+[uuid(C3AC6694-4C9A-4C2C-BD81-25700827AF2E), version(1.0)]
+library DOpusScriptingExtensions_FileLockingInfoProvider_Lib
+{
+	importlib("stdole2.tlb");
+
+  [uuid(FB956840-50F4-442C-A76B-8549113D1B36)]
+  coclass ProcessInfo
+  {
+    [default] interface IProcessInfo;
+  };
+
+  [uuid(51722BC4-F414-4C88-8B6D-6FDA48DB10FF)]
+  coclass FileLockingInfoProvider
+  {
+    [default] interface IFileLockingInfoProvider;
+  };
+};
+
+import "shobjidl.idl";

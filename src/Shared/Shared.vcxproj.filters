@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{ec08da86-8ece-4871-9da8-98a2f58e3a7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="grpc_generated">
+      <UniqueIdentifier>{51e31a22-6af0-4d3a-a3b8-22d83734b888}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Utils\Exceptions.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\LineInfo.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\StringUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\WinApiUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Utils\Logging.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.grpc.pb.h">
+      <Filter>grpc_generated</Filter>
+    </ClInclude>
+    <ClInclude Include="$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.pb.h">
+      <Filter>grpc_generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DownloadDependencies.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="FileLockingInfoProvider.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.grpc.pb.cc">
+      <Filter>grpc_generated</Filter>
+    </ClCompile>
+    <ClCompile Include="$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.pb.cc">
+      <Filter>grpc_generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

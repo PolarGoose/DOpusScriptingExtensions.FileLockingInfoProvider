@@ -1,0 +1,20 @@
+on: push
+
+jobs:
+  build:
+    runs-on: windows-2025-VS2026
+    steps:
+      - uses: actions/checkout@v6
+      - run: New-Item -ItemType Junction -Path C:\r -Target "${{ github.workspace }}"
+      - shell: pwsh
+        working-directory: C:\r
+        run: ./build.ps1
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          draft: true
+          files: build/Publish/*.msi.zip
+      - uses: actions/upload-artifact@v6
+        with:
+          name: Build artifacts
+          path: build/Publish/*.msi.zip

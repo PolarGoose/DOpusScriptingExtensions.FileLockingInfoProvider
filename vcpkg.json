@@ -1,0 +1,25 @@
+{
+  "vcpkg-configuration": {
+    "default-registry": {
+      "kind": "git",
+      "baseline": "b472291f295551b7127359ea38fdd2ca092f6f1b",
+      "repository": "https://github.com/microsoft/vcpkg"
+    },
+    "registries": [
+      {
+        "kind": "artifact",
+        "location": "https://github.com/microsoft/vcpkg-ce-catalog/archive/refs/heads/main.zip",
+        "name": "microsoft"
+      }
+    ]
+  },
+
+  "dependencies": [
+    "boost-locale",
+    "boost-dll",
+    "grpc",
+    "abseil",
+    "spdlog",
+    "doctest"
+  ]
+}

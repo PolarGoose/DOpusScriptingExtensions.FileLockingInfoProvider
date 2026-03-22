@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package GrpcGenerated;
+
+import "google/protobuf/empty.proto";
+
+message ProcessInfo {
+  uint64 process_id = 1;
+  optional string executable_path = 2;
+  optional string domain_name = 3;
+  optional string user_name = 4;
+  repeated string locked_files = 5;
+  repeated string modules = 6;
+}
+
+message LockingProcessInfos {
+  map<uint64 /* PID */, ProcessInfo /* processInfo */> process_infos = 1;
+}
+
+service FileLockingInfoProviderServiceGrpc {
+  rpc GetLockingProcessInfos(google.protobuf.Empty) returns (LockingProcessInfos);
+}
