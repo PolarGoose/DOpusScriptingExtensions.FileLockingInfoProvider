@@ -22,16 +22,16 @@ inline std::vector<std::string> ToUtf8StringVector(const std::vector<std::wstrin
 // Allow std::format(L"..") to format std::filesystem::path and boost::filesystem::path
 namespace std {
   template <>
-  struct std::formatter<std::filesystem::path, wchar_t>
-    : std::formatter<std::wstring, wchar_t> {
-    auto format(const std::filesystem::path& path, wformat_context& ctx) const {
+  struct formatter<filesystem::path, wchar_t>
+    : formatter<wstring, wchar_t> {
+    auto format(const filesystem::path& path, wformat_context& ctx) const {
       return formatter<wstring, wchar_t>::format(path.c_str(), ctx);
     }
   };
 
   template <>
-  struct std::formatter<boost::filesystem::path, wchar_t>
-    : std::formatter<std::wstring, wchar_t> {
+  struct formatter<boost::filesystem::path, wchar_t>
+    : formatter<wstring, wchar_t> {
     auto format(const boost::filesystem::path& path, wformat_context& ctx) const {
       return formatter<wstring, wchar_t>::format(path.c_str(), ctx);
     }

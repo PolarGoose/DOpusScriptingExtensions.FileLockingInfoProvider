@@ -42,22 +42,29 @@ static bool ContainsElement(const google::protobuf::RepeatedPtrField<std::string
   return false;
 }
 
+static std::string GetUniqueUnixSocketTempFile() {
+  return std::string("unix:") + (boost::filesystem::temp_directory_path() / boost::filesystem::unique_path("FileLockingInfoProviderTest-%%%%-%%%%-%%%%.sock")).string();
+}
+
 TEST_CASE("ProcessHandlesServiceGrpcServer test") {
   FileLockingInfoProviderServiceGrpcImpl processHandlesServiceGrpcImpl;
 
+  const auto tempUnixSocketPath = GetUniqueUnixSocketTempFile();
+
   grpc::ServerBuilder builder;
-  int selectedPort = 0;
-  builder.AddListeningPort("127.0.0.1:0", grpc::InsecureServerCredentials(), &selectedPort);
+  builder.AddListeningPort(tempUnixSocketPath, grpc::InsecureServerCredentials());
   builder.RegisterService(&processHandlesServiceGrpcImpl);
   const auto grpcServer = builder.BuildAndStart();
 
-  auto client = GrpcGenerated::FileLockingInfoProviderServiceGrpc::NewStub(grpc::CreateChannel("127.0.0.1:" + std::to_string(selectedPort), grpc::InsecureChannelCredentials()));
+  REQUIRE(grpcServer != nullptr);
+
+  auto client = GrpcGenerated::FileLockingInfoProviderServiceGrpc::NewStub(grpc::CreateChannel(tempUnixSocketPath, grpc::InsecureChannelCredentials()));
 
   GrpcGenerated::LockingProcessInfos response;
   grpc::ClientContext context;
-  auto start = std::chrono::high_resolution_clock::now();
-  const auto& status = client->GetLockingProcessInfos(&context, google::protobuf::Empty(), &response);
-  std::cout << std::format("GetLockingProcessInfos time taken: {}ms\n", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start).count());
+  spdlog::stopwatch sw;
+  const auto status = client->GetLockingProcessInfos(&context, google::protobuf::Empty(), &response);
+  SPDLOG_INFO("client->GetLockingProcessInfos time taken: {} seconds\n", sw);
 
   REQUIRE(status.ok());
   REQUIRE(response.process_infos_size() > 0);
@@ -88,6 +95,10 @@ TEST_CASE("ProcessHandlesServiceGrpcServer test") {
     "Should contain locked folder 'C:\\Windows\\System32\\'");
 
   AssertDoesNotContainProcess(response,
-    [](const auto& info) { return ContainsElement(info.modules(), [&](const std::string& path) { return path.starts_with(R"(\\?\)"); }); },
+    [](const auto& info) {
+      return ContainsElement(info.modules(), [](const std::string& path) {
+        return path.starts_with(R"(\\?\)");
+        });
+    },
     "Should not contain path that start with \\\\?\\");
 }

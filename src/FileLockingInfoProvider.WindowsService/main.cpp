@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Shared/Utils/Logging.h"
+#include "Shared/GrpcAddress.h"
 #include "FileLockingInfoProvider.WindowsService/FileLockingInfoProviderServiceGrpcImpl.h"
 
 static const auto& g_serviceName = L"DOpusScriptingExtensions.ProcessHandlesService";
@@ -44,12 +45,28 @@ static void WINAPI ServiceMain(const DWORD /* argc */, LPWSTR* /* argv */) {
     FileLockingInfoProviderServiceGrpcImpl processHandlesServiceGrpc;
     SPDLOG_INFO("PROCEXP152.SYS driver loaded");
 
-    SPDLOG_INFO("Start GRPC server on port 43786");
+    const auto& grpcUnixSocketFilePath = g_grpcUnixSocketAddress.substr(5); // strip "unix:" prefix
+
+    SPDLOG_INFO("Remove existing socket file if exists: '{}'", grpcUnixSocketFilePath);
+    std::filesystem::remove(grpcUnixSocketFilePath); // remove existing socket file if exists
+
+    SPDLOG_INFO("Start GRPC server using UDS '{}'", g_grpcUnixSocketAddress);
     grpc::ServerBuilder builder;
-    builder.AddListeningPort("127.0.0.1:43786", grpc::InsecureServerCredentials());
+    builder.AddListeningPort(g_grpcUnixSocketAddress, grpc::InsecureServerCredentials());
     builder.RegisterService(&processHandlesServiceGrpc);
     auto grpcServer = builder.BuildAndStart();
     SPDLOG_INFO("GRPC server started");
+
+    SPDLOG_INFO("Set socket file permissions to allow all users to connect");
+    if (const auto err = SetNamedSecurityInfoA(/* pObjectName  */ const_cast<char*>(grpcUnixSocketFilePath.c_str()),
+                                               /* ObjectType   */ SE_FILE_OBJECT,
+                                               /* SecurityInfo */ DACL_SECURITY_INFORMATION,
+                                               /* psidOwner    */ nullptr,
+                                               /* psidGroup    */ nullptr,
+                                               /* pDacl        */ nullptr, // null DACL = unrestricted access
+                                               /* pSacl        */ nullptr); err != ERROR_SUCCESS) {
+      THROW_WEXCEPTION(L"Failed to set socket file permissions using 'SetNamedSecurityInfoA'. Error {}", err);
+    }
 
     SetState(serviceStatusHandle, SERVICE_RUNNING);
 
@@ -71,7 +88,7 @@ static void WINAPI ServiceMain(const DWORD /* argc */, LPWSTR* /* argv */) {
 }
 
 int main() {
-  ConfigureGlobalSpdLogger(L"DOpusScriptingExtensions.FileLockingInfoProvider.WindowsService.log.txt");
+  ConfigureGlobalSpdLogger(L"C:/ProgramData/DOpusScriptingExtensions.FileLockingInfoProvider/WindowsService.log.txt");
 
   SPDLOG_INFO("main start");
 

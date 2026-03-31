@@ -1,7 +1,7 @@
 #pragma once
 
-#include "FileLockingInfoProvider/FileLockingInfoProvider/ProcessInfo.h"
-#include "FileLockingInfoProvider/FileLockingInfoProvider/LockedFilesDatabase.h"
+#include "FileLockingInfoProvider.ComDll/FileLockingInfoProvider/ProcessInfo.h"
+#include "FileLockingInfoProvider.ComDll/FileLockingInfoProvider/LockedFilesDatabase.h"
 
 class ATL_NO_VTABLE CFileLockingInfoProvider :
   public ATL::CComObjectRootEx<ATL::CComSingleThreadModel>,

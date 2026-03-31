@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Shared/Utils/Exceptions.h"
-#include "FileLockingInfoProvider/FileLockingInfoProvider_i.h"
-#include "FileLockingInfoProvider/Utils/ComUtils.h"
+#include "FileLockingInfoProvider.ComDll/FileLockingInfoProvider_i.h"
+#include "FileLockingInfoProvider.ComDll/Utils/ComUtils.h"
 
 class ATL_NO_VTABLE CProcessInfo :
   public ATL::CComObjectRootEx<ATL::CComSingleThreadModel>,

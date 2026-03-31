@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GrpcAddress.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Utils\Exceptions.h" />
     <ClInclude Include="Utils\LineInfo.h" />

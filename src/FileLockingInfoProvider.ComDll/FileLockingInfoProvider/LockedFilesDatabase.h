@@ -1,7 +1,8 @@
 #pragma once
 
 #include <grpc_generated/FileLockingInfoProvider.grpc.pb.h>
-#include "FileLockingInfoProvider/FileLockingInfoProvider/ProcessInfo.h"
+#include "Shared/GrpcAddress.h"
+#include "FileLockingInfoProvider.ComDll/FileLockingInfoProvider/ProcessInfo.h"
 
 class LockedFilesDatabase final : private boost::noncopyable {
 public:
@@ -47,7 +48,7 @@ public:
 
 private:
   LockedFilesDatabase() {
-    _connection = GrpcGenerated::FileLockingInfoProviderServiceGrpc::NewStub(grpc::CreateChannel("127.0.0.1:43786", grpc::InsecureChannelCredentials()));
+    _connection = GrpcGenerated::FileLockingInfoProviderServiceGrpc::NewStub(grpc::CreateChannel(g_grpcUnixSocketAddress, grpc::InsecureChannelCredentials()));
     _updateThread = std::thread(&LockedFilesDatabase::UpdateDatabaseThread, this);
   }
 
@@ -62,7 +63,7 @@ private:
         GrpcGenerated::LockingProcessInfos response;
         grpc::ClientContext context;
         const auto& res = _connection->GetLockingProcessInfos(&context, google::protobuf::Empty(), &response);
-        if(!res.ok()) {
+        if (!res.ok()) {
           SPDLOG_ERROR("GRPC call `GetLockingProcessInfos` failed:\n{}", res.error_message());
         }
 
@@ -111,6 +112,7 @@ private:
   // * "C:\Test\Directory" -> "c:\test\directory\"
   // * "C:\Test\Directory\\" -> "c:\test\directory\"
   // * "C:\Test\Directory\" -> "c:\test\directory\"
+  // * "Z:\home\user" -> "\\wsl.localhost\ubuntu-24.04\home\user\"
   static void NormalizeFilePath(std::wstring& path) {
     path = std::filesystem::canonical(path);
     if (std::filesystem::is_directory(path) && !path.ends_with(L'\\')) {

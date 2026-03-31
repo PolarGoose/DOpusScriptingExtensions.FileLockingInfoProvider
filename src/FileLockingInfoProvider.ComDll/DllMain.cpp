@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Resource.h"
 #include "Shared/Utils/Logging.h"
-#include "FileLockingInfoProvider/FileLockingInfoProvider/FileLockingInfoProvider.h"
+#include "FileLockingInfoProvider.ComDll/FileLockingInfoProvider/FileLockingInfoProvider.h"
 
 class CDOpusScriptingExtensionsModule : public ATL::CAtlDllModuleT<CDOpusScriptingExtensionsModule>
 {
@@ -14,7 +14,7 @@ CDOpusScriptingExtensionsModule _AtlModule;
 
 extern "C" BOOL WINAPI DllMain(HINSTANCE /* hInstance */, DWORD dwReason, LPVOID lpReserved)
 {
-  ConfigureGlobalSpdLogger(std::format(L"DOpusScriptingExtensions.FileLockingInfoProvider.log-{}.txt", GetCurrentProcessId()));
+  ConfigureGlobalSpdLogger(std::filesystem::temp_directory_path() / std::format(L"DOpusScriptingExtensions.FileLockingInfoProvider.log-{}.txt", GetCurrentProcessId()));
   return _AtlModule.DllMain(dwReason, lpReserved);
 }
 

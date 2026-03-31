@@ -12,6 +12,7 @@
 #include <winternl.h>
 #include <wtypes.h>
 #include <Psapi.h>
+#include <aclapi.h>
 
 #include <atlbase.h>
 #include <atlcom.h>
@@ -38,6 +39,7 @@
 #include <google/protobuf/empty.pb.h>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/dll.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>

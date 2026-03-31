@@ -31,6 +31,7 @@
     <ClInclude Include="$(BuildFolder)grpc_generated/grpc_generated/FileLockingInfoProvider.pb.h">
       <Filter>grpc_generated</Filter>
     </ClInclude>
+    <ClInclude Include="GrpcAddress.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DownloadDependencies.ps1" />

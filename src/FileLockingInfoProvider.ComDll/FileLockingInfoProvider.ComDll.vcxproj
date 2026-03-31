@@ -15,7 +15,7 @@
     <ProjectGuid>{66064A37-C36F-8579-52ED-11720C4523AA}</ProjectGuid>
     <Keyword>AtlProj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>FileLockingInfoProvider</ProjectName>
+    <ProjectName>FileLockingInfoProvider.ComDll</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -41,12 +41,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <TargetName>DOpusScriptingExtensions.FileLockingInfoProvider</TargetName>
+    <TargetName>DOpusScriptingExtensions.FileLockingInfoProvider.ComDll</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <TargetName>DOpusScriptingExtensions.FileLockingInfoProvider</TargetName>
+    <TargetName>DOpusScriptingExtensions.FileLockingInfoProvider.ComDll</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

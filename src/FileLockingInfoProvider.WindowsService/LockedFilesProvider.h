@@ -37,18 +37,23 @@ public:
           continue;
         }
 
-        auto path = devicePathToDrivePathConverter.GetDriveLetterBasedFullName(*handleName);
-        if (!path) {
+        // Network file or folder like "\Device\Mup\wsl.localhost\Ubuntu-24.04\home\user"
+        // Convert it to UNC path like "\\wsl.localhost\Ubuntu-24.04\home\user\"
+        if(handleName->starts_with(L"\\Device\\Mup")) {
+          auto uncPath = std::format(L"\\{}", handleName->substr(11));
+          AddTrailingBackslashIfDirectory(uncPath);
+          processInfos->at(handle.UniqueProcessId).add_locked_files(ToUtf8(uncPath));
           continue;
         }
 
-        // Add `\\` at the end of the path if it is a directory. Ignore errors.
-        std::error_code ec;
-        if (std::filesystem::is_directory(*path, ec) && !path->ends_with(L'\\')) {
-          path->push_back(L'\\');
+        // Try to convert device path to drive letter based path
+        auto path = devicePathToDrivePathConverter.GetDriveLetterBasedFullName(*handleName);
+        if (path) {
+          AddTrailingBackslashIfDirectory(*path);
         }
 
-        processInfos->at(handle.UniqueProcessId).add_locked_files(ToUtf8(*path));
+        // If we can't convert the file handle name to a path, then add the raw handle name to the list.
+        processInfos->at(handle.UniqueProcessId).add_locked_files(path ? ToUtf8(*path) : ToUtf8(*handleName));
       }
       catch (const std::exception&) {
       }
@@ -56,6 +61,13 @@ public:
   }
 
 private:
+  static void AddTrailingBackslashIfDirectory(std::wstring& path) {
+    std::error_code ec;
+    if (std::filesystem::is_directory(path, ec) && !path.ends_with(L'\\')) {
+      path.push_back(L'\\');
+    }
+  }
+
   std::generator<SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX> GetAllHandles() const {
     const auto& allHandles = _ntdll.QuerySystemHandleInformation();
     for (ULONG_PTR i = 0; i < allHandles->NumberOfHandles; i++) {

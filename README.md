@@ -43,7 +43,7 @@ The project consists of two parts:
   * Also takes into account loaded DLLs and memory-mapped files.
   * Uses [Google RPC](https://grpc.io/) to allow the Directory Opus process to access the service functionality.
   * Running as a service allows getting information about all processes, including running as an Admin or System. For security reasons, only the list of processes and locked files is exposed. No other information can be requested from the service.
-* COM DLL `DOpusScriptingExtensions.FileLockingInfoProvider.dll`
+* COM DLL `DOpusScriptingExtensions.FileLockingInfoProvider.ComDll.dll`
   * Gets loaded by Directory Opus when `new ActiveXObject("DOpusScriptingExtensions.FileLockingInfoProvider")` is called.
   * Runs a background loop that updates the file locking database every 5 seconds. It calls `DOpusScriptingExtensions.FileLockingInfoProvider.WindowsService` Google RPC interface to get the list of processes and their locked files.
 
