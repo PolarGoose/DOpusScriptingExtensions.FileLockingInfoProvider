@@ -79,8 +79,6 @@ public:
         THROW_WEXCEPTION(L"NtQuerySystemInformation failed with NTSTATUS 0x{:08X}", status);
       }
     }
-
-    THROW_WINAPI_EX_MSG(NtQuerySystemInformation, L"buffer size is not enough");
   }
 
 private:

@@ -2,7 +2,7 @@
 
 #include "Shared/Utils/Exceptions.h"
 #include "Shared/Utils/WinApiUtils.h"
-#include "FileLockingInfoProvider.WindowsService/Utils/ScopedHandle.h"
+#include "Shared/Utils/ScopedHandle.h"
 #include "FileLockingInfoProvider.WindowsService/NtDll.h"
 
 class ProcExp152Driver : boost::noncopyable {

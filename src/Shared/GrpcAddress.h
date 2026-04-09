@@ -1,3 +1,5 @@
 #pragma once
 
-inline static const std::string g_grpcUnixSocketAddress = "unix:C:/ProgramData/DOpusScriptingExtensions.FileLockingInfoProvider/FileLockingInfoProvider.WindowsService.sock";
+inline std::string GetGrpcUnixSocketAddress() {
+  return "unix:C:\\Program Files\\DOpusScriptingExtensions.FileLockingInfoProvider\\grpc.sock";
+}

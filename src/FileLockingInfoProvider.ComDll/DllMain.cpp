@@ -14,7 +14,7 @@ CDOpusScriptingExtensionsModule _AtlModule;
 
 extern "C" BOOL WINAPI DllMain(HINSTANCE /* hInstance */, DWORD dwReason, LPVOID lpReserved)
 {
-  ConfigureGlobalSpdLogger(std::filesystem::temp_directory_path() / std::format(L"DOpusScriptingExtensions.FileLockingInfoProvider.log-{}.txt", GetCurrentProcessId()));
+  ConfigureGlobalSpdLogger(std::filesystem::temp_directory_path() / std::format(L"DOpusScriptingExtensions.FileLockingInfoProvider.ComDll.log-{}.txt", GetCurrentProcessId()));
   return _AtlModule.DllMain(dwReason, lpReserved);
 }
 

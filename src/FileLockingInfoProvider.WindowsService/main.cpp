@@ -3,7 +3,7 @@
 #include "Shared/GrpcAddress.h"
 #include "FileLockingInfoProvider.WindowsService/FileLockingInfoProviderServiceGrpcImpl.h"
 
-static const auto& g_serviceName = L"DOpusScriptingExtensions.ProcessHandlesService";
+static const auto& g_serviceName = L"DOpusScriptingExtensions.FileLockingInfoProvider.WindowsService";
 static absl::Notification g_stopEvent;
 
 static void SetState(const SERVICE_STATUS_HANDLE serviceStatusHandle, const DWORD state, const DWORD win32ExitCode = NO_ERROR, const DWORD waitHintMs = 0) {
@@ -45,14 +45,15 @@ static void WINAPI ServiceMain(const DWORD /* argc */, LPWSTR* /* argv */) {
     FileLockingInfoProviderServiceGrpcImpl processHandlesServiceGrpc;
     SPDLOG_INFO("PROCEXP152.SYS driver loaded");
 
-    const auto& grpcUnixSocketFilePath = g_grpcUnixSocketAddress.substr(5); // strip "unix:" prefix
+    const auto& grpcUnixSocketAddress = GetGrpcUnixSocketAddress();
+    const auto& grpcUnixSocketFilePath = grpcUnixSocketAddress.substr(5); // strip "unix:" prefix
 
     SPDLOG_INFO("Remove existing socket file if exists: '{}'", grpcUnixSocketFilePath);
     std::filesystem::remove(grpcUnixSocketFilePath); // remove existing socket file if exists
 
-    SPDLOG_INFO("Start GRPC server using UDS '{}'", g_grpcUnixSocketAddress);
+    SPDLOG_INFO("Start GRPC server using UDS '{}'", grpcUnixSocketAddress);
     grpc::ServerBuilder builder;
-    builder.AddListeningPort(g_grpcUnixSocketAddress, grpc::InsecureServerCredentials());
+    builder.AddListeningPort(grpcUnixSocketAddress, grpc::InsecureServerCredentials());
     builder.RegisterService(&processHandlesServiceGrpc);
     auto grpcServer = builder.BuildAndStart();
     SPDLOG_INFO("GRPC server started");
@@ -88,7 +89,7 @@ static void WINAPI ServiceMain(const DWORD /* argc */, LPWSTR* /* argv */) {
 }
 
 int main() {
-  ConfigureGlobalSpdLogger(L"C:/ProgramData/DOpusScriptingExtensions.FileLockingInfoProvider/WindowsService.log.txt");
+  ConfigureGlobalSpdLogger("C:/Program Files/DOpusScriptingExtensions.FileLockingInfoProvider/DOpusScriptingExtensions.FileLockingInfoProvider.WindowsService.log.txt");
 
   SPDLOG_INFO("main start");
 
@@ -96,7 +97,8 @@ int main() {
                                    { nullptr, nullptr } };
 
   if (!StartServiceCtrlDispatcherW(table)) {
-    SPDLOG_INFO("Failed to call StartServiceCtrlDispatcherW");
+    const WinApiException ex(L"StartServiceCtrlDispatcherW", LINE_INFO, L"Failed to start the service thread");
+    SPDLOG_INFO("{}", ex.what());
     return static_cast<int>(GetLastError());
   }
 

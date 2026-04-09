@@ -9,7 +9,12 @@ message ProcessInfo {
   optional string executable_path = 2;
   optional string domain_name = 3;
   optional string user_name = 4;
+
+  // Raw device path like "\Device\HarddiskVolume2\path\to\file.txt"
   repeated string locked_files = 5;
+
+  // Full path like "C:\my\test.dll".
+  // Sometimes it can be a raw path like "\\Device\Volume{470e4501-335c-11f1-b2d8-2c0da7fb0517}\test.dll"
   repeated string modules = 6;
 }
 

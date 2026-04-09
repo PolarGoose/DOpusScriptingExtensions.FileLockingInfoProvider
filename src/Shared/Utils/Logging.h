@@ -7,8 +7,8 @@ inline void ConfigureGlobalSpdLogger(const std::filesystem::path& logFileFullNam
     spdlog::set_default_logger(spdlog::rotating_logger_mt(
       /* logger_name   */ "Global SPD logger",
       /* filename      */ logFileFullName.string(),
-      /* max_file_size */ 2 * 1024 * 1024, /* 2 MiB */
-      /* max_files     */ 2));
-    spdlog::flush_every(std::chrono::seconds(2));
+      /* max_file_size */ 10 * 1024 * 1024, /* 10 MiB */
+      /* max_files     */ 1));
+    spdlog::flush_every(std::chrono::seconds(5));
   });
 };

@@ -19,14 +19,11 @@
                         Stop="both"
                         Remove="uninstall"
                         Wait="yes" />
+        <RemoveFile Id="id9" Name="*" On="uninstall" />
+        <RemoveFolder Id="id10" On="uninstall" />
       </Component>
       <Component Id="Component2" Directory="DRIVERSFOLDER" Permanent="yes" NeverOverwrite="yes">
-        <File Id="id9" Source="PROCEXP152.SYS" />
-      </Component>
-      <Component Id="Component3" Directory="ProgramDataFolder" Guid="45896B04-E276-42C1-B98B-C2217D5FFA83">
-        <CreateFolder />
-        <RemoveFile Id="id10" Name="*" On="uninstall" />
-        <RemoveFolder Id="id11" On="uninstall" />
+        <File Id="id11" Source="PROCEXP152.SYS" />
       </Component>
     </Feature>
   </Package>
@@ -36,9 +33,6 @@
     </StandardDirectory>
     <StandardDirectory Id="System64Folder">
       <Directory Id="DRIVERSFOLDER" Name="drivers"/>
-    </StandardDirectory>
-    <StandardDirectory Id="CommonAppDataFolder">
-      <Directory Id="ProgramDataFolder" Name="DOpusScriptingExtensions.FileLockingInfoProvider"/>
     </StandardDirectory>
   </Fragment>
 </Wix>

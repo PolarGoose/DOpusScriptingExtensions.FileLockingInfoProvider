@@ -32,6 +32,9 @@
       <Filter>grpc_generated</Filter>
     </ClInclude>
     <ClInclude Include="GrpcAddress.h" />
+    <ClInclude Include="Utils\ScopedHandle.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="DownloadDependencies.ps1" />

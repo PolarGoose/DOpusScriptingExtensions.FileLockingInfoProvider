@@ -105,6 +105,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="FileLockingInfoProvider\DevicePathToDrivePathConverter.h" />
+    <ClInclude Include="FileLockingInfoProvider\VolumeGuidPathToDrivePathConverter.h" />
     <ClInclude Include="FileLockingInfoProvider_i.h" />
     <ClInclude Include="FileLockingInfoProvider\FileLockingInfoProvider.h" />
     <ClInclude Include="FileLockingInfoProvider\LockedFilesDatabase.h" />

@@ -10,6 +10,7 @@
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
     <VcpkgUseStatic>true</VcpkgUseStatic>
     <VcpkgInstalledDir>$(BuildFolder)v\$(VcpkgTriplet)</VcpkgInstalledDir>
     <IncludePath>$(MSBuildThisFileDirectory);$(BuildFolder)grpc_generated;$(IncludePath)</IncludePath>

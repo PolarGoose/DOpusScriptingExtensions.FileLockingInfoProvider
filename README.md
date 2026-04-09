@@ -6,6 +6,10 @@ This is a standalone project. It doesn't require [DOpus-Scripting-Extensions](ht
 * Supports Windows 10 x64 or higher.
 * Supports only the JScript scripting language. VBScript is not supported.
 * Portable Directory Opus is not supported because the DLL requires installation using an MSI installer.
+* `FileLockingInfoProvider.GetLockingProcesses` method uses a cache that gets updated every 5 seconds. Thus, the information that you receive can be outdated.
+
+# Extra Features
+* Also shows locked files located on network shares and mounted drives.
 
 # How to use
 * Download the installer from the [latest release](https://github.com/PolarGoose/DOpusScriptingExtensions.FileLockingInfoProvider/releases) and install it on your system

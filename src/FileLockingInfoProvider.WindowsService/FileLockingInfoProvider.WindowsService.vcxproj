@@ -80,12 +80,10 @@
     <ClInclude Include="FileLockingInfoProviderServiceGrpcImpl.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DevicePathToDrivePathConverter.h" />
     <ClInclude Include="LockedFilesProvider.h" />
     <ClInclude Include="NtDll.h" />
     <ClInclude Include="ProcExp152Driver.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Utils\ScopedHandle.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.vcxproj">

@@ -16,6 +16,7 @@
     <ClInclude Include="Utils\Exceptions.h" />
     <ClInclude Include="Utils\LineInfo.h" />
     <ClInclude Include="Utils\Logging.h" />
+    <ClInclude Include="Utils\ScopedHandle.h" />
     <ClInclude Include="Utils\StringUtils.h" />
     <ClInclude Include="Utils\WinApiUtils.h" />
   </ItemGroup>

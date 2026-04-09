@@ -22,7 +22,19 @@ struct ServiceHandleDeleter {
     CloseServiceHandle(h);
   }
 };
+
+struct FindVolumeHandleDeleter {
+  using pointer = HANDLE;
+
+  void operator()(const HANDLE h) {
+    if (h == nullptr || h == INVALID_HANDLE_VALUE) {
+      return;
+    }
+    FindVolumeClose(h);
+  }
+};
 }
 
 using ScopedHandle = std::unique_ptr<HANDLE, Priv::HandleDeleter>;
 using ScopedServiceHandle = std::unique_ptr<SC_HANDLE, Priv::ServiceHandleDeleter>;
+using ScopedFindVolumeHandle = std::unique_ptr<HANDLE, Priv::FindVolumeHandleDeleter>;

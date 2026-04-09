@@ -1,6 +1,7 @@
 #include "pch.h"
 #include <doctest/doctest.h>
 #include "FileLockingInfoProvider.WindowsService/FileLockingInfoProviderServiceGrpcImpl.h"
+#include "FileLockingInfoProvider.ComDll/FileLockingInfoProvider/DevicePathToDrivePathConverter.h"
 
 static void AssertContainsProcess(const GrpcGenerated::LockingProcessInfos& lockingProcessInfos,
                                   std::function<bool(const GrpcGenerated::ProcessInfo&)> predicate,
@@ -17,11 +18,10 @@ static void AssertDoesNotContainProcess(const GrpcGenerated::LockingProcessInfos
                                         std::function<bool(const GrpcGenerated::ProcessInfo&)> predicate,
                                         const std::string_view errorMessage) {
   for (const auto& [pid, processInfo] : lockingProcessInfos.process_infos()) {
-    if (!predicate(processInfo)) {
-      return;
+    if (predicate(processInfo)) {
+      FAIL(errorMessage);
     }
   }
-  FAIL(errorMessage);
 }
 
 static bool ContainsElement(const google::protobuf::RepeatedPtrField<std::string>& array, const std::string& element) {
@@ -42,12 +42,23 @@ static bool ContainsElement(const google::protobuf::RepeatedPtrField<std::string
   return false;
 }
 
+static bool ContainsFilePath(const DevicePathToDrivePathConverter& devicePathToDrivePathConverter, const google::protobuf::RepeatedPtrField<std::string>& array, std::wstring filePath) {
+  return ContainsElement(array, [&](const std::string& path) {
+    const auto& driveBasedPath = devicePathToDrivePathConverter.GetDriveLetterBasedFullName(ToUtf16(path));
+    if(!driveBasedPath) {
+      return false;
+    }
+    return boost::algorithm::to_lower_copy(*driveBasedPath) == boost::algorithm::to_lower_copy(filePath);
+  });
+}
+
 static std::string GetUniqueUnixSocketTempFile() {
   return std::string("unix:") + (boost::filesystem::temp_directory_path() / boost::filesystem::unique_path("FileLockingInfoProviderTest-%%%%-%%%%-%%%%.sock")).string();
 }
 
 TEST_CASE("ProcessHandlesServiceGrpcServer test") {
   FileLockingInfoProviderServiceGrpcImpl processHandlesServiceGrpcImpl;
+  DevicePathToDrivePathConverter devicePathToDrivePathConverter;
 
   const auto tempUnixSocketPath = GetUniqueUnixSocketTempFile();
 
@@ -68,7 +79,7 @@ TEST_CASE("ProcessHandlesServiceGrpcServer test") {
 
   REQUIRE(status.ok());
   REQUIRE(response.process_infos_size() > 0);
-  REQUIRE(response.process_infos().contains(4)); // Contains "System" process
+  REQUIRE(response.process_infos().contains(4)); // Contains "System" process with PID=4
 
   AssertContainsProcess(response,
     [](const auto& info) { return info.domain_name() == "NT AUTHORITY"; },
@@ -87,11 +98,11 @@ TEST_CASE("ProcessHandlesServiceGrpcServer test") {
     "Should contain module 'C:\\Windows\\System32\\svchost.exe'");
 
   AssertContainsProcess(response,
-    [](const auto& info) { return ContainsElement(info.locked_files(), "C:\\Windows\\System32\\en-US\\svchost.exe.mui"); },
+    [&](const auto& info) { return ContainsFilePath(devicePathToDrivePathConverter, info.locked_files(), L"C:\\Windows\\System32\\en-US\\svchost.exe.mui"); },
     "Should contain locked file 'C:\\Windows\\System32\\en-US\\svchost.exe.mui'");
 
   AssertContainsProcess(response,
-    [](const auto& info) { return ContainsElement(info.locked_files(), "C:\\Windows\\System32\\"); },
+    [&](const auto& info) { return ContainsFilePath(devicePathToDrivePathConverter, info.locked_files(), L"C:\\Windows\\System32"); },
     "Should contain locked folder 'C:\\Windows\\System32\\'");
 
   AssertDoesNotContainProcess(response,

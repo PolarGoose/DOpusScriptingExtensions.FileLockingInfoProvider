@@ -31,6 +31,10 @@
     <ClInclude Include="FileLockingInfoProvider_i.h">
       <Filter>Gen</Filter>
     </ClInclude>
+    <ClInclude Include="FileLockingInfoProvider\DevicePathToDrivePathConverter.h">
+      <Filter>FileLockingInfoProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLockingInfoProvider\VolumeGuidPathToDrivePathConverter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
